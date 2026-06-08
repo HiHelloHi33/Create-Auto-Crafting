@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "create:sturdy_sheet" },
+    { "item": "create:electron_tube" },
+    { "item": "create:brass_nugget" }
+  ],
+  "result": {
+    "item": "createautocrafting:logic_processor"
+  }
+}

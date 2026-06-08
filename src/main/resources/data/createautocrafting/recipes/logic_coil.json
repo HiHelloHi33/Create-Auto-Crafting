@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "P",
+    "C",
+    "R"
+  ],
+  "key": {
+    "P": { "item": "createautocrafting:logic_processor" },
+    "C": { "item": "create:copper_casing" },
+    "R": { "item": "minecraft:redstone_block" }
+  },
+  "result": {
+    "item": "createautocrafting:logic_coil"
+  }
+}

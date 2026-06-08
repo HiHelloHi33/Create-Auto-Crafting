@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.hihellohi.createautocrafting.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "createautocrafting.refmap.json",
+  "mixins": [
+    "LogisticsManagerMixin",
+    "PackagerBlockEntityMixin",
+    "StockRequestSyncMixin"
+  ],
+  "client": [
+    "StockKeeperRequestScreenAccessor",
+    "StockKeeperRequestScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

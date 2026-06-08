@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "E",
+    "P",
+    "B"
+  ],
+  "key": {
+    "E": { "item": "create:factory_gauge" },
+    "P": { "item": "createautocrafting:logic_processor" },
+    "B": { "item": "create:brass_casing" }
+  },
+  "result": {
+    "item": "createautocrafting:packager_crafter_kit"
+  }
+}

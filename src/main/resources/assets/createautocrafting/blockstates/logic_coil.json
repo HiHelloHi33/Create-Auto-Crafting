@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "createautocrafting:block/logic_coil" }
+  }
+}
