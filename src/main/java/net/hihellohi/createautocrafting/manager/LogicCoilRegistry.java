@@ -30,7 +30,7 @@ public final class LogicCoilRegistry {
     private static final int RANGE = 32;
     private static final double RANGE_SQR = RANGE * RANGE;
     private static final int MAX_FOOTPRINT = 3;
-    private static final int MIN_HEIGHT = 3;
+    private static final int MIN_HEIGHT = 2; // forms from a 1x1x2 column upward
     private static final int MAX_HEIGHT = 16;
     private static final int MAX_PRISM = MAX_FOOTPRINT * MAX_FOOTPRINT * MAX_HEIGHT; // 144
 
