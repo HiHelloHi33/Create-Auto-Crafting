@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "create:transmitter",
+    "create:clipboard"
+  ],
+  "result": {
+    "id": "createautocrafting:crafting_blueprint",
+    "count": 1
+  }
+}

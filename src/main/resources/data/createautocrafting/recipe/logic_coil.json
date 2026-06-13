@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "P",
+    "B",
+    "S"
+  ],
+  "key": {
+    "P": "createautocrafting:logic_processor",
+    "B": "create:brass_casing",
+    "S": "create:copper_sheet"
+  },
+  "result": {
+    "id": "createautocrafting:logic_coil",
+    "count": 1
+  }
+}
