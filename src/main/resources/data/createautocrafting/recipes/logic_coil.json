@@ -2,13 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "P",
-    "C",
-    "R"
+    "B",
+    "S"
   ],
   "key": {
     "P": { "item": "createautocrafting:logic_processor" },
-    "C": { "item": "create:copper_casing" },
-    "R": { "item": "minecraft:redstone_block" }
+    "B": { "item": "create:brass_casing" },
+    "S": { "item": "create:copper_sheet" }
   },
   "result": {
     "item": "createautocrafting:logic_coil"

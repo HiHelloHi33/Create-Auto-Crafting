@@ -68,12 +68,7 @@ public class LogicCoilBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos,
                                  Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof LogicCoilBlockEntity coil && coil.canModify(player)) {
-                NetworkHooks.openScreen(serverPlayer, coil, pos);
-            }
-        }
-        return InteractionResult.sidedSuccess(level.isClientSide);
+        // Pass so that right-clicking a coil with a coil item places more coils (see LogicCoilItem).
+        return InteractionResult.PASS;
     }
 }

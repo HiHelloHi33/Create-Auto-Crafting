@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_column",
   "textures": {
-    "side": "create:block/fluid_tank",
-    "end": "create:block/fluid_tank_top"
+    "side": "createautocrafting:block/block",
+    "end": "createautocrafting:block/block_top"
   }
 }

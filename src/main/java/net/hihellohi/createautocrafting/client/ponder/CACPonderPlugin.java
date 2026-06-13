@@ -12,9 +12,8 @@ import net.minecraft.resources.ResourceLocation;
  * scene to the item that shows it in the Ponder index; the {@code String} schematic path resolves
  * to {@code assets/createautocrafting/ponder/<path>.nbt} under this mod's namespace.
  *
- * <p>The Crafting Distributor has no item of its own (it is a converted Packager), so its scene is
- * attached to the Packager Crafter Kit — the item that creates it. Move that line to another
- * component if you'd rather surface it elsewhere.
+ * <p>Only the Logic Coil ships Ponder scenes; the Crafting Blueprint and Crafter Kit convey their
+ * info through a Create-style "Press [Shift]" tooltip ({@code CACTooltips}) instead.
  */
 public class CACPonderPlugin implements PonderPlugin {
 
@@ -25,9 +24,8 @@ public class CACPonderPlugin implements PonderPlugin {
 
     @Override
     public void registerScenes(PonderSceneRegistrationHelper<ResourceLocation> helper) {
-        helper.addStoryBoard(ModItems.CRAFTING_BLUEPRINT.getId(), "blueprint", CACScenes::blueprint);
-        helper.addStoryBoard(ModItems.LOGIC_COIL.getId(), "logic_coil", CACScenes::logicCoil);
-        helper.addStoryBoard(ModItems.PACKAGER_CRAFTER_KIT.getId(), "crafter_kit", CACScenes::crafterKit);
-        helper.addStoryBoard(ModItems.PACKAGER_CRAFTER_KIT.getId(), "distributor", CACScenes::distributor);
+        // Only the Logic Coil keeps a Ponder; the other items use a Shift-info tooltip instead.
+        helper.addStoryBoard(ModItems.LOGIC_COIL.getId(), "coil_1", CACScenes::coilOne);
+        //helper.addStoryBoard(ModItems.LOGIC_COIL.getId(), "coil_2", CACScenes::coilTwo);
     }
 }

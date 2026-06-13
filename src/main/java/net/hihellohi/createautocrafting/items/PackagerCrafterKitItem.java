@@ -26,6 +26,16 @@ public class PackagerCrafterKitItem extends Item {
     }
 
     @Override
+    public void appendHoverText(ItemStack stack, @org.jetbrains.annotations.Nullable Level level,
+                                java.util.List<net.minecraft.network.chat.Component> tooltip,
+                                net.minecraft.world.item.TooltipFlag flag) {
+        CACTooltips.appendShiftInfo(tooltip,
+                "tooltip.createautocrafting.packager_crafter_kit.1",
+                "tooltip.createautocrafting.packager_crafter_kit.2");
+        super.appendHoverText(stack, level, tooltip, flag);
+    }
+
+    @Override
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();

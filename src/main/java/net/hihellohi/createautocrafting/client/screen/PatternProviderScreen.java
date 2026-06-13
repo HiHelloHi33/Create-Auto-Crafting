@@ -4,42 +4,35 @@ import net.hihellohi.createautocrafting.menu.PatternProviderMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
 
 /**
- * Flat-drawn Pattern Provider GUI — the frogport-style panel without frogport functionality.
- * Top row holds blueprint pattern slots; below is the player inventory.
+ * Pattern Provider GUI drawn from crafting_manager.png: two rows of eight blueprint pattern slots in
+ * the top panel, the player inventory below. Dropping a configured Crafting Blueprint into a slot
+ * teaches the provider that recipe.
  */
 public class PatternProviderScreen extends AbstractContainerScreen<PatternProviderMenu> {
 
-    private static final int PANEL = 0xFFC6C6C6;
-    private static final int PANEL_DARK = 0xFF373737;
-    private static final int PANEL_HL = 0xFFFFFFFF;
-    private static final int PANEL_SH = 0xFF555555;
+    private static final ResourceLocation TEXTURE =
+            new ResourceLocation("createautocrafting", "textures/gui/crafting_manager.png");
+    // The drawn panel occupies (16,16)..(199,192) of the 256x256 sheet.
+    private static final int TEX_U = 16;
+    private static final int TEX_V = 16;
 
     public PatternProviderScreen(PatternProviderMenu menu, Inventory inv, Component title) {
         super(menu, inv, title);
-        this.imageWidth = 176;
-        this.imageHeight = 168;
-        this.titleLabelY = 6;
-        this.inventoryLabelY = this.imageHeight - 94;
+        this.imageWidth = 183;
+        this.imageHeight = 176;
+        this.titleLabelX = 8;
+        this.titleLabelY = 5;
+        this.inventoryLabelX = 11;
+        this.inventoryLabelY = 88;
     }
 
     @Override
     protected void renderBg(GuiGraphics g, float partialTick, int mouseX, int mouseY) {
-        int x = leftPos;
-        int y = topPos;
-        g.fill(x, y, x + imageWidth, y + imageHeight, PANEL);
-        g.fill(x, y, x + imageWidth, y + 1, PANEL_HL);
-        g.fill(x, y, x + 1, y + imageHeight, PANEL_HL);
-        g.fill(x, y + imageHeight - 1, x + imageWidth, y + imageHeight, PANEL_SH);
-        g.fill(x + imageWidth - 1, y, x + imageWidth, y + imageHeight, PANEL_SH);
-
-        for (Slot slot : menu.slots) {
-            g.fill(x + slot.x - 1, y + slot.y - 1, x + slot.x + 17, y + slot.y + 17, PANEL_SH);
-            g.fill(x + slot.x, y + slot.y, x + slot.x + 16, y + slot.y + 16, PANEL_DARK);
-        }
+        g.blit(TEXTURE, leftPos, topPos, TEX_U, TEX_V, imageWidth, imageHeight, 256, 256);
     }
 
     @Override
@@ -51,7 +44,7 @@ public class PatternProviderScreen extends AbstractContainerScreen<PatternProvid
 
     @Override
     protected void renderLabels(GuiGraphics g, int mouseX, int mouseY) {
-        g.drawString(font, title, titleLabelX, titleLabelY, 0x404040, false);
+        g.drawString(font, title, titleLabelX, titleLabelY, 0xFFFFFF, true);
         g.drawString(font, playerInventoryTitle, inventoryLabelX, inventoryLabelY, 0x404040, false);
     }
 }

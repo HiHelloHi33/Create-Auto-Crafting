@@ -84,6 +84,15 @@ public class CraftingBlueprintItem extends Item implements MenuProvider {
         return isConfigured(stack);
     }
 
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip,
+                                net.minecraft.world.item.TooltipFlag flag) {
+        CACTooltips.appendShiftInfo(tooltip,
+                "tooltip.createautocrafting.crafting_blueprint.1",
+                "tooltip.createautocrafting.crafting_blueprint.2");
+        super.appendHoverText(stack, level, tooltip, flag);
+    }
+
     // ---- pattern persistence -------------------------------------------------
 
     public static void readPattern(ItemStack stack, ItemStackHandler grid, ItemStackHandler result) {

@@ -27,11 +27,16 @@ import java.util.List;
  */
 public class PatternProviderMenu extends AbstractContainerMenu {
 
-    public static final int PATTERN_SLOTS = 9;
-    private static final int SLOT_X = 8;
-    private static final int SLOT_Y = 24;
-    private static final int INV_X = 8;
-    private static final int INV_Y = 85;
+    // Two rows of eight pattern slots, laid out to match crafting_manager.png.
+    public static final int PATTERN_COLS = 8;
+    public static final int PATTERN_ROWS = 2;
+    public static final int PATTERN_SLOTS = PATTERN_COLS * PATTERN_ROWS;
+    private static final int SLOT_X = 16;
+    private static final int SLOT_Y = 27;
+    private static final int SLOT_PITCH_X = 19;
+    private static final int SLOT_PITCH_Y = 19;
+    private static final int INV_X = 11;
+    private static final int INV_Y = 99;
 
     private final Player player;
     private final BlockPos providerPos;
@@ -57,7 +62,9 @@ public class PatternProviderMenu extends AbstractContainerMenu {
         }
 
         for (int i = 0; i < PATTERN_SLOTS; i++) {
-            addSlot(new PatternSlot(patterns, i, SLOT_X + i * 18, SLOT_Y));
+            int col = i % PATTERN_COLS;
+            int row = i / PATTERN_COLS;
+            addSlot(new PatternSlot(patterns, i, SLOT_X + col * SLOT_PITCH_X, SLOT_Y + row * SLOT_PITCH_Y));
         }
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {

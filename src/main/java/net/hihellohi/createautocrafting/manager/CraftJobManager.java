@@ -110,9 +110,17 @@ public final class CraftJobManager {
         String key = key(result);
         int total = NetworkInventories.count(packagers, result);
         int avail = reserved.computeIfAbsent(key, k -> total);
-        int use = Math.min(avail, amount);
-        reserved.put(key, avail - use);
-        int toCraft = amount - use;
+        int toCraft;
+        if (depth == 0) {
+            // Top-level request (the end result): always craft the full requested amount, even when the
+            // network already stocks that many — "request 16" means make 16 more, not "top up to 16".
+            // Existing stock stays reserved so ingredient branches can still draw from it.
+            toCraft = amount;
+        } else {
+            int use = Math.min(avail, amount);
+            reserved.put(key, avail - use);
+            toCraft = amount - use;
+        }
         if (toCraft <= 0) {
             return true; // enough already in stock; no step needed
         }

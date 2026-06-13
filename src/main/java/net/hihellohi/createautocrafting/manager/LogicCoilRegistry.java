@@ -58,7 +58,12 @@ public final class LogicCoilRegistry {
         return countCoilsOnNetwork(level, networkId) * STEPS_PER_COIL;
     }
 
-    /** Counts coils that belong to a valid multiblock assembly near the network's providers. */
+    /**
+     * Counts coils that belong to a valid sub-prism assembly near the network's providers. Loose
+     * coils stuck to a finished prism don't disqualify the prism — only coils that are part of a
+     * valid box ({@link #assemblyOf} != null) are counted, matching what the connected texture shows
+     * as assembled.
+     */
     public static int countCoilsOnNetwork(ServerLevel level, UUID networkId) {
         Set<BlockPos> coils = BY_DIMENSION.get(level.dimension());
         if (coils == null || coils.isEmpty()) {
@@ -78,8 +83,13 @@ public final class LogicCoilRegistry {
                 continue;
             }
             List<BlockPos> group = floodFill(start, all, visited);
-            if (isValidPrism(group) && nearAnyProvider(group, providers)) {
-                total += group.size();
+            if (!nearAnyProvider(group, providers)) {
+                continue;
+            }
+            for (BlockPos coil : group) {
+                if (assemblyOf(level, coil) != null) {
+                    total++;
+                }
             }
         }
         return total;
@@ -139,6 +149,88 @@ public final class LogicCoilRegistry {
 
     private static boolean isCoil(BlockGetter level, BlockPos pos) {
         return level.getBlockState(pos).getBlock() instanceof LogicCoilBlock;
+    }
+
+    /**
+     * The largest valid solid coil box (footprint &le; 3x3, height 2..16) that <em>contains</em>
+     * {@code pos}, as {@code {minX, minY, minZ, dx, dy, dz}}, or {@code null} if pos isn't part of
+     * such a box. Unlike {@link #prismFor}, loose coils stuck to a finished assembly don't invalidate
+     * it — the search finds the biggest prism the coil belongs to and ignores the extras. Two coils
+     * in the same prism resolve to the same box, so connections stay within the assembly.
+     */
+    public static int[] assemblyOf(BlockGetter level, BlockPos pos) {
+        if (!isCoil(level, pos)) {
+            return null;
+        }
+        int px = pos.getX();
+        int py = pos.getY();
+        int pz = pos.getZ();
+        BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+        int[] best = null;
+        long bestVol = 1; // require >= 2 blocks to count as assembled
+
+        for (int dx = 1; dx <= MAX_FOOTPRINT; dx++) {
+            for (int ox = 0; ox < dx; ox++) {
+                int minX = px - ox;
+                for (int dz = 1; dz <= MAX_FOOTPRINT; dz++) {
+                    for (int oz = 0; oz < dz; oz++) {
+                        int minZ = pz - oz;
+                        if (!layerSolid(level, cursor, minX, dx, minZ, dz, py)) {
+                            continue;
+                        }
+                        int maxY = py;
+                        int minY = py;
+                        while (maxY - minY + 1 < MAX_HEIGHT && layerSolid(level, cursor, minX, dx, minZ, dz, maxY + 1)) {
+                            maxY++;
+                        }
+                        while (maxY - minY + 1 < MAX_HEIGHT && layerSolid(level, cursor, minX, dx, minZ, dz, minY - 1)) {
+                            minY--;
+                        }
+                        int dy = maxY - minY + 1;
+                        if (dy < MIN_HEIGHT) {
+                            continue;
+                        }
+                        long vol = (long) dx * dz * dy;
+                        if (vol > bestVol || (vol == bestVol && best != null && lessCorner(minX, minY, minZ, best))) {
+                            best = new int[]{minX, minY, minZ, dx, dy, dz};
+                            bestVol = vol;
+                        }
+                    }
+                }
+            }
+        }
+        return best;
+    }
+
+    /** Is {@code pos} inside the box {@code {minX,minY,minZ,dx,dy,dz}}? */
+    public static boolean inAssembly(int[] box, BlockPos pos) {
+        return box != null
+                && pos.getX() >= box[0] && pos.getX() < box[0] + box[3]
+                && pos.getY() >= box[1] && pos.getY() < box[1] + box[4]
+                && pos.getZ() >= box[2] && pos.getZ() < box[2] + box[5];
+    }
+
+    private static boolean layerSolid(BlockGetter level, BlockPos.MutableBlockPos cursor,
+                                      int minX, int dx, int minZ, int dz, int y) {
+        for (int x = minX; x < minX + dx; x++) {
+            for (int z = minZ; z < minZ + dz; z++) {
+                if (!(level.getBlockState(cursor.set(x, y, z)).getBlock() instanceof LogicCoilBlock)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /** Deterministic tiebreak between equal-volume boxes: smaller (minX, minY, minZ) wins. */
+    private static boolean lessCorner(int minX, int minY, int minZ, int[] best) {
+        if (minX != best[0]) {
+            return minX < best[0];
+        }
+        if (minY != best[1]) {
+            return minY < best[1];
+        }
+        return minZ < best[2];
     }
 
     private static List<BlockPos> floodFill(BlockPos start, Set<BlockPos> all, Set<BlockPos> visited) {

@@ -56,9 +56,17 @@ public final class CraftingPlanner {
         String key = key(item);
         int total = NetworkInventories.count(packagers, item);
         int avail = remaining.computeIfAbsent(key, k -> total);
-        int use = Math.min(avail, amount);
-        remaining.put(key, avail - use);
-        int toCraft = amount - use;
+        int toCraft;
+        if (depth == 0) {
+            // The requested end result is always crafted in full, regardless of existing stock — so the
+            // preview matches the job (request 16 → craft 16 more). Existing stock stays available to
+            // ingredient branches below.
+            toCraft = amount;
+        } else {
+            int use = Math.min(avail, amount);
+            remaining.put(key, avail - use);
+            toCraft = amount - use;
+        }
 
         CraftingPattern pattern = PatternRegistry.getPatternForResult(level, networkId, item);
         boolean craftable = pattern != null;

@@ -1,5 +1,9 @@
 package net.hihellohi.createautocrafting.client.screen;
 
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBehaviour.ValueSettings;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsBoard;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsFormatter;
+import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsScreen;
 import net.hihellohi.createautocrafting.network.CraftPlanRequestPacket;
 import net.hihellohi.createautocrafting.network.ModPackets;
 import net.minecraft.client.Minecraft;
@@ -11,22 +15,22 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 /**
- * "How many?" selector for a craftable. A draggable value bar (it only moves while you hold a click
- * on it), with the supplied button texture used for a "Cancel" and a "Next" button. Next sends the
- * crafting-plan request; Cancel / Escape returns to the ticker.
+ * "How many?" selector — Create's own value-settings board (the very control the Rotation Speed
+ * Controller uses), one bar, plus a Cancel and a Next button drawn from our button texture. The bar
+ * works exactly like Create's: the value follows the cursor over it. Next confirms the value and
+ * asks the server for a crafting plan; Cancel / Escape returns to the ticker.
  */
-public class CraftAmountScreen extends Screen {
+public class CraftAmountScreen extends ValueSettingsScreen {
     private static final int MIN = 1;
+    private static final int MILESTONE = 16;
     private static final ResourceLocation BUTTON =
             new ResourceLocation("createautocrafting", "textures/gui/button.png");
-
-    private static final int PANEL_W = 200;
-    private static final int PANEL_H = 92;
-    private static final int TRACK_H = 10;
-    private static final int HANDLE_W = 6;
 
     @Nullable
     private final Screen parent;
@@ -35,39 +39,96 @@ public class CraftAmountScreen extends Screen {
     private final int max;
     private int amount = MIN;
 
-    private int left;
-    private int top;
-    private int trackX;
-    private int trackY;
-    private int trackW;
+    private TexButton cancelButton;
+    private TexButton nextButton;
     private boolean dragging;
 
     public CraftAmountScreen(@Nullable Screen parent, BlockPos tickerPos, ItemStack result, int max) {
-        super(Component.translatable("gui.createautocrafting.craft_amount.title"));
+        super(tickerPos, board(result, Math.max(MIN, max)), new ValueSettings(0, MIN), vs -> {}, 0);
         this.parent = parent;
         this.tickerPos = tickerPos;
         this.result = result;
         this.max = Math.max(MIN, max);
-        this.amount = Math.min(amount, this.max);
+    }
+
+    private static ValueSettingsBoard board(ItemStack result, int max) {
+        ValueSettingsFormatter formatter =
+                new ValueSettingsFormatter(vs -> Component.literal(String.valueOf(vs.value())));
+        return new ValueSettingsBoard(result.getHoverName().copy(), max, MILESTONE,
+                List.of(Component.translatable("gui.createautocrafting.craft_amount.row")), formatter);
     }
 
     @Override
     protected void init() {
-        left = (this.width - PANEL_W) / 2;
-        top = (this.height - PANEL_H) / 2;
-        trackX = left + 16;
-        trackY = top + 44;
-        trackW = PANEL_W - 32;
-
+        super.init();
         Component cancelText = Component.translatable("gui.cancel");
         Component nextText = Component.translatable("gui.createautocrafting.craft_amount.next");
-        int by = top + PANEL_H - 26;
-        int nextW = font.width(nextText) + 16;
         int cancelW = font.width(cancelText) + 16;
-        int nextX = left + PANEL_W - 12 - nextW;
-        int cancelX = nextX - 6 - cancelW;
-        addRenderableWidget(new TexButton(nextX, by, nextW, 20, nextText, b -> confirm()));
-        addRenderableWidget(new TexButton(cancelX, by, cancelW, 20, cancelText, b -> onClose()));
+        int nextW = font.width(nextText) + 16;
+        int gap = 6;
+        int total = cancelW + gap + nextW;
+        int y = this.height / 2 + 46;
+        int cancelX = (this.width - total) / 2;
+        int nextX = cancelX + cancelW + gap;
+        cancelButton = new TexButton(cancelX, y, cancelW, 20, cancelText, b -> onClose());
+        nextButton = new TexButton(nextX, y, nextW, 20, nextText, b -> confirm());
+        addRenderableWidget(cancelButton);
+        addRenderableWidget(nextButton);
+    }
+
+    private boolean overButton(double mouseX, double mouseY) {
+        return (cancelButton != null && cancelButton.isMouseOver(mouseX, mouseY))
+                || (nextButton != null && nextButton.isMouseOver(mouseX, mouseY));
+    }
+
+    /** Updates {@code amount} from the cursor — only used while actively dragging the bar. */
+    private void pickFromMouse(double mouseX, double mouseY) {
+        ValueSettings v = getClosestCoordinate((int) mouseX, (int) mouseY);
+        if (v != null) {
+            amount = Mth.clamp(v.value(), MIN, max);
+        }
+    }
+
+    private boolean overBar(double mouseX, double mouseY) {
+        return !overButton(mouseX, mouseY) && Math.abs(mouseY - this.height / 2) < 44;
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (super.mouseClicked(mouseX, mouseY, button)) {
+            return true; // a button handled it
+        }
+        if (button == 0 && overBar(mouseX, mouseY)) {
+            dragging = true;
+            pickFromMouse(mouseX, mouseY);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (dragging && button == 0) {
+            pickFromMouse(mouseX, mouseY);
+            return true;
+        }
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    /** Extra darkening over Create's default backdrop so the picker pops more. Raise alpha to dim further. */
+    private static final int EXTRA_DIM = 0x99000000;
+
+    @Override
+    protected void renderWindowBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+        super.renderWindowBackground(g, mouseX, mouseY, partialTick);
+        g.fill(0, 0, this.width, this.height, EXTRA_DIM);
+    }
+
+    @Override
+    protected void renderWindow(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+        // The bar always shows the picked value; it only changes while you click-and-drag it.
+        Vec2 p = getCoordinateOfValue(0, amount);
+        super.renderWindow(g, (int) p.x, (int) p.y, partialTick);
     }
 
     private void confirm() {
@@ -85,84 +146,22 @@ public class CraftAmountScreen extends Screen {
     }
 
     @Override
-    public boolean isPauseScreen() {
-        return false;
-    }
-
-    private void setAmountFromMouse(double mouseX) {
-        double t = (mouseX - trackX) / Math.max(1, trackW);
-        amount = Mth.clamp((int) Math.round(MIN + t * (max - MIN)), MIN, max);
-    }
-
-    private boolean overTrack(double mouseX, double mouseY) {
-        return mouseX >= trackX - HANDLE_W && mouseX <= trackX + trackW + HANDLE_W
-                && mouseY >= trackY - 4 && mouseY <= trackY + TRACK_H + 4;
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (super.mouseClicked(mouseX, mouseY, button)) {
-            return true; // a button handled it
-        }
-        if (button == 0 && overTrack(mouseX, mouseY)) {
-            dragging = true;
-            setAmountFromMouse(mouseX);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dx, double dy) {
-        if (dragging && button == 0) {
-            setAmountFromMouse(mouseX);
-            return true;
-        }
-        return super.mouseDragged(mouseX, mouseY, button, dx, dy);
-    }
-
-    @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         dragging = false;
-        return super.mouseReleased(mouseX, mouseY, button);
+        // Don't run Create's release-to-apply (it would send its own packet); confirm is the button.
+        return false;
     }
 
     @Override
-    public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        renderBackground(g);
-
-        // Panel.
-        g.fill(left, top, left + PANEL_W, top + PANEL_H, 0xFFC6C6C6);
-        g.fill(left, top, left + PANEL_W, top + 1, 0xFFFFFFFF);
-        g.fill(left, top, left + 1, top + PANEL_H, 0xFFFFFFFF);
-        g.fill(left, top + PANEL_H - 1, left + PANEL_W, top + PANEL_H, 0xFF555555);
-        g.fill(left + PANEL_W - 1, top, left + PANEL_W, top + PANEL_H, 0xFF555555);
-
-        // Header: item + name.
-        g.renderItem(result, left + 12, top + 8);
-        g.drawString(font, result.getHoverName(), left + 32, top + 12, 0x404040, false);
-
-        // Value bar (drag-only).
-        g.fill(trackX, trackY, trackX + trackW, trackY + TRACK_H, 0xFF373737);
-        int fillW = (int) Math.round((double) (amount - MIN) / Math.max(1, max - MIN) * trackW);
-        g.fill(trackX, trackY, trackX + fillW, trackY + TRACK_H, 0xFFB87333);
-        int hx = trackX + Mth.clamp(fillW - HANDLE_W / 2, 0, trackW - HANDLE_W);
-        g.fill(hx, trackY - 2, hx + HANDLE_W, trackY + TRACK_H + 2, 0xFFFFE0A0);
-        g.fill(hx, trackY - 2, hx + HANDLE_W, trackY + TRACK_H + 2, 0x40000000);
-        g.fill(hx, trackY - 2, hx + HANDLE_W, trackY + TRACK_H + 2, 0xFFE0B870);
-
-        // Value number.
-        Component amountText = Component.translatable("gui.createautocrafting.craft_amount.value", amount);
-        g.drawCenteredString(font, amountText, left + PANEL_W / 2, top + 30, 0xFFFFFF);
-
-        super.render(g, mouseX, mouseY, partialTick);
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        return false;
     }
 
-    /** A button drawn from the supplied frame texture (40x16 region at the top-left), 9-sliced. */
+    /** A button drawn from our frame texture (40x16 region at the top-left of a 64x64 png), 9-sliced. */
     private static class TexButton extends Button {
         private static final int SRC_W = 40;
         private static final int SRC_H = 16;
-        private static final int C = 5; // corner inset preserved when scaling
+        private static final int C = 5;
 
         TexButton(int x, int y, int w, int h, Component msg, OnPress onPress) {
             super(x, y, w, h, msg, onPress, DEFAULT_NARRATION);
@@ -174,7 +173,6 @@ public class CraftAmountScreen extends Screen {
             int y = getY();
             int w = getWidth();
             int h = getHeight();
-            // Nine-slice the 40x16 frame from the 64x64 texture into the button bounds.
             patch(g, x, y, C, C, 0, 0, C, C);
             patch(g, x + C, y, w - 2 * C, C, C, 0, SRC_W - 2 * C, C);
             patch(g, x + w - C, y, C, C, SRC_W - C, 0, C, C);
@@ -185,9 +183,9 @@ public class CraftAmountScreen extends Screen {
             patch(g, x + C, y + h - C, w - 2 * C, C, C, SRC_H - C, SRC_W - 2 * C, C);
             patch(g, x + w - C, y + h - C, C, C, SRC_W - C, SRC_H - C, C, C);
 
-            int color = !active ? 0xA0A0A0 : (isHoveredOrFocused() ? 0x5A3A1A : 0x402810);
-            var font = Minecraft.getInstance().font;
-            g.drawCenteredString(font, getMessage(), x + w / 2, y + (h - 8) / 2, color);
+            // Normal Minecraft button text: white with drop shadow (grey when disabled).
+            int color = active ? 0xFFFFFFFF : 0xFFA0A0A0;
+            g.drawCenteredString(Minecraft.getInstance().font, getMessage(), x + w / 2, y + (h - 8) / 2, color);
         }
 
         private static void patch(GuiGraphics g, int dx, int dy, int dw, int dh, int sx, int sy, int sw, int sh) {

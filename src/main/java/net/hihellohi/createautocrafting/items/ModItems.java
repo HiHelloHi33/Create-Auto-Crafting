@@ -26,7 +26,7 @@ public class ModItems {
                     .stacksTo(1)));
 
     public static final RegistryObject<BlockItem> LOGIC_COIL = ITEMS.register("logic_coil",
-            () -> new BlockItem(ModBlocks.LOGIC_COIL.get(),
+            () -> new LogicCoilItem(ModBlocks.LOGIC_COIL.get(),
                     new Item.Properties()
                             .stacksTo(64)));
 

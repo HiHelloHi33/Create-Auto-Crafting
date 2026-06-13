@@ -2,7 +2,7 @@ package net.hihellohi.createautocrafting.client.model;
 
 import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
-import net.hihellohi.createautocrafting.blocks.LogicCoilBlock;
+import net.hihellohi.createautocrafting.manager.LogicCoilRegistry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
@@ -19,14 +19,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * Wraps the Logic Coil's model so a lone coil (no neighbouring coils on any side) renders with the
- * plain base texture, while any coil that touches another uses Create's connected-texture model.
- * The connected rendering is entirely Create's {@link CTModel}; this only adds the "isolated → base"
- * switch.
+ * Wraps the Logic Coil's model so the connected texture only applies when the coil is part of a
+ * valid assembly (a solid prism — see {@link LogicCoilRegistry#prismFor}). Coils that aren't
+ * assembled (a lone coil, or an incomplete/irregular group) render the plain base texture instead,
+ * so an unfinished structure doesn't show a torn connected texture. The connected rendering itself
+ * is entirely Create's {@link CTModel}; for a valid prism every neighbour is part of it, so the
+ * connection naturally stays within the assembly.
  */
 public class CoilCTModel extends BakedModelWrapper<BakedModel> {
 
-    private static final ModelProperty<Boolean> ISOLATED = new ModelProperty<>();
+    private static final ModelProperty<Boolean> ASSEMBLED = new ModelProperty<>();
 
     private final CTModel connected;
 
@@ -37,22 +39,16 @@ public class CoilCTModel extends BakedModelWrapper<BakedModel> {
 
     @Override
     public ModelData getModelData(BlockAndTintGetter level, BlockPos pos, BlockState state, ModelData data) {
-        boolean isolated = true;
-        for (Direction dir : Direction.values()) {
-            if (level.getBlockState(pos.relative(dir)).getBlock() instanceof LogicCoilBlock) {
-                isolated = false;
-                break;
-            }
-        }
+        boolean assembled = LogicCoilRegistry.assemblyOf(level, pos) != null;
         ModelData ctData = connected.getModelData(level, pos, state, data);
-        return ctData.derive().with(ISOLATED, isolated).build();
+        return ctData.derive().with(ASSEMBLED, assembled).build();
     }
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side,
                                     RandomSource rand, ModelData data, @Nullable RenderType renderType) {
-        Boolean isolated = data.get(ISOLATED);
-        if (isolated != null && isolated) {
+        Boolean assembled = data.get(ASSEMBLED);
+        if (assembled == null || !assembled) {
             return originalModel.getQuads(state, side, rand, data, renderType); // plain base texture
         }
         return connected.getQuads(state, side, rand, data, renderType);
