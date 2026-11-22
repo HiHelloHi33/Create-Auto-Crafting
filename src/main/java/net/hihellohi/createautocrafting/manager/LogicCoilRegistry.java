@@ -1,5 +1,6 @@
 package net.hihellohi.createautocrafting.manager;
 
+import net.hihellohi.createautocrafting.blocks.CraftingDistributorBlockEntity;
 import net.hihellohi.createautocrafting.blocks.LogicCoilBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -49,8 +50,9 @@ public final class LogicCoilRegistry {
         }
     }
 
-    public static boolean isOnNetwork(ServerLevel level, UUID networkId) {
-        return countCoilsOnNetwork(level, networkId) > 0;
+    /** Forget everything (server stopped). */
+    public static void clear() {
+        BY_DIMENSION.clear();
     }
 
     /** Total crafting steps available from valid coil assemblies on the network. */
@@ -69,7 +71,10 @@ public final class LogicCoilRegistry {
         if (coils == null || coils.isEmpty()) {
             return 0;
         }
-        List<BlockPos> providers = PatternRegistry.getProvidersForNetwork(level, networkId);
+        List<BlockPos> providers = new ArrayList<>();
+        for (CraftingDistributorBlockEntity provider : PatternRegistry.getProvidersForNetwork(level, networkId)) {
+            providers.add(provider.getBlockPos());
+        }
         if (providers.isEmpty()) {
             return 0;
         }

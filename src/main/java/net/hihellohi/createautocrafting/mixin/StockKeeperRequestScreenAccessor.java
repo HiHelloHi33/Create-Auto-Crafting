@@ -4,9 +4,10 @@ import com.simibubi.create.content.logistics.stockTicker.StockKeeperRequestScree
 import net.createmod.catnip.data.Couple;
 import net.minecraft.client.gui.GuiGraphics;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-/** Exposes the private helpers of Create's request screen needed for our craftable handling. */
+/** Exposes the private helpers and layout fields of Create's request screen that we need. */
 @Mixin(StockKeeperRequestScreen.class)
 public interface StockKeeperRequestScreenAccessor {
 
@@ -15,4 +16,13 @@ public interface StockKeeperRequestScreenAccessor {
 
     @Invoker(value = "drawItemCount", remap = false)
     void createautocrafting$drawItemCount(GuiGraphics graphics, int count, int flag);
+
+    @Accessor(value = "itemsX", remap = false)
+    int createautocrafting$getItemsX();
+
+    @Accessor(value = "itemsY", remap = false)
+    int createautocrafting$getItemsY();
+
+    @Accessor(value = "currentItemSource", remap = false)
+    void createautocrafting$setCurrentItemSource(java.util.List<java.util.List<com.simibubi.create.content.logistics.BigItemStack>> source);
 }

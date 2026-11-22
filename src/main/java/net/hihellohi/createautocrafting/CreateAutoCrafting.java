@@ -12,6 +12,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import org.slf4j.Logger;
 
@@ -23,15 +24,15 @@ public class CreateAutoCrafting {
     public CreateAutoCrafting(IEventBus modBus, ModContainer modContainer) {
         ModDataComponents.register(modBus);
         ModItems.register(modBus);
+        net.hihellohi.createautocrafting.fluid.ModFluids.register(modBus);
         ModBlocks.register(modBus);
         ModMenus.register(modBus);
+        net.hihellohi.createautocrafting.etching.ModRecipes.register(modBus);
         ModCreativeTabs.register(modBus);
         ModPackets.register(modBus);
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             CreateAutoCraftingClient.register(modBus);
         }
-
-        LOGGER.info("Create Auto Crafting loaded — Pattern Providers & Logic Coils ready.");
     }
 }

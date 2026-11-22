@@ -4,11 +4,10 @@
   "package": "net.hihellohi.createautocrafting.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "LogisticsManagerMixin",
-    "PackagerBlockEntityMixin",
     "StockRequestSyncMixin"
   ],
   "client": [
+    "PackagerRendererMixin",
     "StockKeeperRequestScreenAccessor",
     "StockKeeperRequestScreenMixin"
   ],

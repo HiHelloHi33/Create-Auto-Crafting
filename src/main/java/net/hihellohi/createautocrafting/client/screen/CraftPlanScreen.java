@@ -104,7 +104,9 @@ public class CraftPlanScreen extends Screen {
 
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        renderBackground(g, mouseX, mouseY, partialTick);
+        // Screen.render draws the (blurred) background itself, then the buttons. Everything below is
+        // drawn afterwards so it stays sharp.
+        super.render(g, mouseX, mouseY, partialTick);
         g.drawCenteredString(font, title, this.width / 2, 12, 0xFFFFFF);
 
         Component subtitle = Component.translatable("gui.createautocrafting.plan.subtitle", amount, result.getHoverName());
@@ -132,8 +134,6 @@ public class CraftPlanScreen extends Screen {
         }
         int statusColor = plan.canStart() ? 0xFF80FF80 : 0xFFFF6060;
         g.drawCenteredString(font, status, this.width / 2, this.height - 44, statusColor);
-
-        super.render(g, mouseX, mouseY, partialTick);
     }
 
     private void drawConnectors(GuiGraphics g, Placed parent) {

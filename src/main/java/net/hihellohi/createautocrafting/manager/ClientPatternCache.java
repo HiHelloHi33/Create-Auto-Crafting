@@ -29,6 +29,10 @@ public final class ClientPatternCache {
         }
     }
 
+    public static void clear() {
+        CACHE.clear();
+    }
+
     public static List<CraftingPattern> get(UUID networkId) {
         if (networkId == null) {
             return List.of();

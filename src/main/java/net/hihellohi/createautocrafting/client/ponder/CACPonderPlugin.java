@@ -12,8 +12,8 @@ import net.minecraft.resources.ResourceLocation;
  * scene to the item that shows it in the Ponder index; the {@code String} schematic path resolves
  * to {@code assets/createautocrafting/ponder/<path>.nbt} under this mod's namespace.
  *
- * <p>Only the Logic Coil ships Ponder scenes; the Crafting Blueprint and Crafter Kit convey their
- * info through a Create-style "Press [Shift]" tooltip ({@code CACTooltips}) instead.
+ * <p>Only the Logic Coil ships Ponder scenes; the other items convey their info through a
+ * Create-style "Press [Shift]" tooltip ({@code CACTooltips}) instead.
  */
 public class CACPonderPlugin implements PonderPlugin {
 

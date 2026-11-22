@@ -30,6 +30,10 @@ repositories {
     maven { url = 'https://maven.createmod.net' }         // Create, Ponder, Flywheel, Catnip
     maven { url = 'https://maven.ithundxr.dev/snapshots' } // Registrate (MC1.21)
     maven { url = 'https://maven.blamejared.com' }         // JEI
+    exclusiveContent {                                     // Create Crafts & Additions (Modrinth maven)
+        forRepository { maven { url = 'https://api.modrinth.com/maven' } }
+        filter { includeGroup 'maven.modrinth' }
+    }
 }
 
 base {
@@ -124,6 +128,9 @@ dependencies {
     // Flywheel and Catnip transitively. Published already in Mojang official mappings,
     // so no deobf step is required under ModDevGradle.
     implementation "com.simibubi.create:create-1.21.1:${create_version}"
+
+    // Create Crafts & Additions — Copper Spool for the Logic Coil recipe. Required at runtime.
+    implementation "maven.modrinth:createaddition:${createaddition_version}"
 
     // JEI — API at compile time, full mod at runtime (ghost-ingredient drag into blueprint slots).
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"

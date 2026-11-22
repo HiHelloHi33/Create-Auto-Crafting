@@ -6,11 +6,10 @@ import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBeha
 import com.simibubi.create.content.logistics.packagerLink.LogisticsManager;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrder;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
-import net.hihellohi.createautocrafting.api.PatternProviderHelper;
+import net.hihellohi.createautocrafting.blocks.CraftingDistributorBlockEntity;
 import net.hihellohi.createautocrafting.network.CraftDoneToastPacket;
 import net.hihellohi.createautocrafting.network.ModPackets;
 import net.hihellohi.createautocrafting.pattern.CraftingPattern;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -23,12 +22,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Runs multi-step craft jobs. A job is expanded into steps bottom-up (a step per craftable item that
@@ -46,17 +43,15 @@ public final class CraftJobManager {
     private static final class Step {
         final ItemStack result;
         final int needed;                 // result items this step must produce
-        final BlockPos provider;
         final String address;
         final List<BigItemStack> ingredients;
         boolean shipped;
         boolean done;
         int baseline;
 
-        Step(ItemStack result, int needed, BlockPos provider, String address, List<BigItemStack> ingredients) {
+        Step(ItemStack result, int needed, String address, List<BigItemStack> ingredients) {
             this.result = result;
             this.needed = needed;
-            this.provider = provider;
             this.address = address;
             this.ingredients = ingredients;
         }
@@ -83,9 +78,15 @@ public final class CraftJobManager {
         }
     }
 
-    private static final ConcurrentLinkedQueue<Job> JOBS = new ConcurrentLinkedQueue<>();
+    /** Server-thread only. */
+    private static final List<Job> JOBS = new ArrayList<>();
 
     private CraftJobManager() {}
+
+    /** Forget every running job (server stopped). */
+    public static void clear() {
+        JOBS.clear();
+    }
 
     /** Build and queue a job. Returns false if the tree can't be planned (missing raw materials). */
     public static boolean start(ServerLevel level, UUID networkId, UUID player, ItemStack result, int amount) {
@@ -141,17 +142,17 @@ public final class CraftJobManager {
                     return false;
                 }
             }
-            BlockPos provider = PatternRegistry.getProviderForResult(level, networkId, result);
+            CraftingDistributorBlockEntity provider = PatternRegistry.getProviderForResult(level, networkId, result);
             if (provider == null) {
                 return false;
             }
-            String address = PatternProviderHelper.resolveAddress(level, provider);
+            String address = provider.resolveAddress();
             List<BigItemStack> ingredients = new ArrayList<>();
             for (ItemStack ingredient : merged) {
                 ingredients.add(new BigItemStack(ingredient.copyWithCount(1),
                         Math.max(1, ingredient.getCount()) * crafts));
             }
-            steps.add(new Step(result.copyWithCount(1), toCraft, provider, address, ingredients));
+            steps.add(new Step(result.copyWithCount(1), toCraft, address, ingredients));
             return true;
         } finally {
             inProgress.remove(key);

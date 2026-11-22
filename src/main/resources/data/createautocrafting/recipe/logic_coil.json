@@ -1,17 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "pattern": [
-    "P",
-    "B",
-    "S"
+    "QEQ",
+    "SBS",
+    "QPQ"
   ],
   "key": {
-    "P": "createautocrafting:logic_processor",
-    "B": "create:brass_casing",
-    "S": "create:copper_sheet"
+    "E": { "item": "createautocrafting:t2_circuit" },
+    "S": { "item": "createaddition:copper_spool" },
+    "B": { "item": "create:brass_casing" },
+    "P": { "item": "create:sturdy_sheet" },
+    "Q": { "item": "create:brass_ingot" }
   },
-  "result": {
-    "id": "createautocrafting:logic_coil",
-    "count": 1
-  }
+  "result": { "id": "createautocrafting:logic_coil", "count": 1 }
 }

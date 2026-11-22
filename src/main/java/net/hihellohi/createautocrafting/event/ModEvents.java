@@ -1,116 +1,58 @@
 package net.hihellohi.createautocrafting.event;
 
-import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
 import net.hihellohi.createautocrafting.CreateAutoCrafting;
-import net.hihellohi.createautocrafting.api.PatternProviderHelper;
-import net.hihellohi.createautocrafting.items.CraftingBlueprintItem;
-import net.hihellohi.createautocrafting.items.PackagerCrafterKitItem;
-import net.hihellohi.createautocrafting.manager.VirtualCraftingManager;
-import net.hihellohi.createautocrafting.menu.PatternProviderMenu;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
+import net.hihellohi.createautocrafting.blocks.CraftingDistributorBlock;
+import net.hihellohi.createautocrafting.items.PatternCardItem;
+import net.hihellohi.createautocrafting.manager.CraftJobManager;
+import net.hihellohi.createautocrafting.manager.LogicCoilRegistry;
+import net.hihellohi.createautocrafting.manager.PatternRegistry;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 @EventBusSubscriber(modid = CreateAutoCrafting.MODID)
-public class ModEvents {
-    private static int cleanupTicker;
+public final class ModEvents {
+    /** Craft jobs advance once per second. */
+    private static final int JOB_INTERVAL_TICKS = 20;
+    private static int jobTicker;
 
-    private static int pollTicker;
+    private ModEvents() {}
 
     @SubscribeEvent
     public static void onServerTick(ServerTickEvent.Post event) {
-        if (++cleanupTicker >= 1200) {
-            cleanupTicker = 0;
-            VirtualCraftingManager.cleanup();
-        }
-        // Advance multi-step craft jobs once per second (ship ready steps, detect completion).
-        if (++pollTicker >= 20) {
-            pollTicker = 0;
-            net.hihellohi.createautocrafting.manager.CraftJobManager.tick(event.getServer());
+        if (++jobTicker >= JOB_INTERVAL_TICKS) {
+            jobTicker = 0;
+            CraftJobManager.tick(event.getServer());
         }
     }
 
+    /**
+     * Sneak + right-click a Crafting Distributor with a configured Pattern Card files the card straight
+     * into it. (Vanilla skips a block's own use handler while sneaking with an item, hence the event.)
+     */
     @SubscribeEvent
-    public static void onRightClickPatternProvider(PlayerInteractEvent.RightClickBlock event) {
-        Player player = event.getEntity();
-        Level level = event.getLevel();
-        BlockPos pos = event.getPos();
-
-        BlockEntity be = level.getBlockEntity(pos);
-        if (!(be instanceof PackagerBlockEntity packager)) {
+    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        var player = event.getEntity();
+        if (!player.isSecondaryUseActive()
+                || !(event.getItemStack().getItem() instanceof PatternCardItem)
+                || !(event.getLevel().getBlockState(event.getPos()).getBlock() instanceof CraftingDistributorBlock)) {
             return;
         }
-
-        ItemStack held = event.getItemStack();
-        boolean sneaking = player.isSecondaryUseActive();
-
-        // --- Conversion: kit on a normal Packager turns it into a Pattern Provider --------------
-        if (!PatternProviderHelper.isPatternProvider(packager)) {
-            if (!(held.getItem() instanceof PackagerCrafterKitItem)) {
-                return; // ordinary packager + non-kit: let Create handle it normally
-            }
+        if (CraftingDistributorBlock.quickInsert(event.getLevel(), event.getPos(), player, event.getItemStack())) {
             event.setCanceled(true);
-            event.setCancellationResult(InteractionResult.SUCCESS);
-            if (level.isClientSide) {
-                return;
-            }
-            PatternProviderHelper.markPatternProvider(packager, player.getUUID(), player.getName().getString());
-            level.playSound(null, pos, SoundEvents.SMITHING_TABLE_USE, SoundSource.BLOCKS, 0.8f, 1.2f);
-            if (!player.isCreative()) {
-                held.shrink(1);
-            }
-            player.displayClientMessage(
-                    Component.translatable("message.createautocrafting.converted"), true);
-            return;
+            event.setCancellationResult(InteractionResult.sidedSuccess(event.getLevel().isClientSide));
         }
+    }
 
-        boolean quickInsert = sneaking && held.getItem() instanceof CraftingBlueprintItem;
-
-        // When sneaking with anything other than a blueprint, do NOT intercept: this lets the
-        // player shift-place a Stock Link (or any block) directly onto the Pattern Provider.
-        if (sneaking && !quickInsert) {
-            return;
-        }
-
-        // Non-sneak opens our GUI; sneak+blueprint quick-inserts. Either way we own the click so the
-        // underlying Packager UI never opens for a PRV.
-        event.setCanceled(true);
-        event.setCancellationResult(InteractionResult.SUCCESS);
-        if (level.isClientSide) {
-            return;
-        }
-
-        if (quickInsert) {
-            if (!CraftingBlueprintItem.isConfigured(held)) {
-                return;
-            }
-            if (PatternProviderHelper.getPatternCount(packager) >= PatternProviderMenu.PATTERN_SLOTS) {
-                return;
-            }
-            PatternProviderHelper.addPattern(packager, held);
-            PatternProviderHelper.refreshRegistry(level, pos, packager);
-            if (!player.isCreative()) {
-                held.shrink(1);
-            }
-            return;
-        }
-
-        if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
-            serverPlayer.openMenu(
-                    new SimpleMenuProvider((id, inv, p) -> new PatternProviderMenu(id, inv, pos),
-                            Component.translatable("block.createautocrafting.pattern_provider")),
-                    buf -> buf.writeBlockPos(pos));
-        }
+    /** All of this mod's static state is per-server; drop it so nothing leaks into the next world. */
+    @SubscribeEvent
+    public static void onServerStopped(ServerStoppedEvent event) {
+        PatternRegistry.clear();
+        LogicCoilRegistry.clear();
+        CraftJobManager.clear();
+        jobTicker = 0;
     }
 }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Describes a physical recipe a Pattern Provider should emit as items.
+ * A recipe taken from a Pattern Card: what it makes, what it needs, and how many it makes per craft.
  */
 public record CraftingPattern(ItemStack result, List<ItemStack> ingredients, int outputCount) {
 

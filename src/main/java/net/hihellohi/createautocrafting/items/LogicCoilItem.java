@@ -1,7 +1,6 @@
 package net.hihellohi.createautocrafting.items;
 
 import net.hihellohi.createautocrafting.blocks.LogicCoilBlock;
-import net.hihellohi.createautocrafting.blocks.LogicCoilBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -72,9 +71,6 @@ public class LogicCoilItem extends BlockItem {
             BlockState coilState = getBlock().defaultBlockState();
             for (int i = 0; i < budget; i++) {
                 level.setBlock(targets.get(i), coilState, Block.UPDATE_ALL);
-                if (player != null && level.getBlockEntity(targets.get(i)) instanceof LogicCoilBlockEntity coil) {
-                    coil.setOwner(player);
-                }
             }
             level.playSound(null, topCoil, coilState.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1f, 0.9f);
             if (!creative) {

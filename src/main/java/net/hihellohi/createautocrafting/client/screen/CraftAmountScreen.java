@@ -36,18 +36,19 @@ public class CraftAmountScreen extends ValueSettingsScreen {
     private final BlockPos tickerPos;
     private final ItemStack result;
     private final int max;
-    private int amount = MIN;
+    private int amount;
 
     private TexButton cancelButton;
     private TexButton nextButton;
     private boolean dragging;
 
     public CraftAmountScreen(@Nullable Screen parent, BlockPos tickerPos, ItemStack result, int max) {
-        super(tickerPos, board(result, Math.max(MIN, max)), new ValueSettings(0, MIN), vs -> {}, 0);
+        super(tickerPos, board(result, Math.max(MIN, max)), new ValueSettings(0, Math.min(MILESTONE, Math.max(MIN, max))), vs -> {}, 0);
         this.parent = parent;
         this.tickerPos = tickerPos;
         this.result = result;
         this.max = Math.max(MIN, max);
+        this.amount = Math.min(MILESTONE, this.max);
     }
 
     private static ValueSettingsBoard board(ItemStack result, int max) {
@@ -182,10 +183,10 @@ public class CraftAmountScreen extends ValueSettingsScreen {
             patch(g, x + C, y + h - C, w - 2 * C, C, C, SRC_H - C, SRC_W - 2 * C, C);
             patch(g, x + w - C, y + h - C, C, C, SRC_W - C, SRC_H - C, C, C);
 
-            // Normal Minecraft button text: white with drop shadow (grey when disabled).
-            int color = active ? 0xFFFFFFFF : 0xFFA0A0A0;
-            g.drawCenteredString(net.minecraft.client.Minecraft.getInstance().font, getMessage(),
-                    x + w / 2, y + (h - 8) / 2, color);
+            // Black text, no drop shadow (dark grey when disabled).
+            int color = active ? 0xFF000000 : 0xFF555555;
+            net.minecraft.client.gui.Font f = net.minecraft.client.Minecraft.getInstance().font;
+            g.drawString(f, getMessage(), x + (w - f.width(getMessage())) / 2, y + (h - 8) / 2, color, false);
         }
 
         private static void patch(GuiGraphics g, int dx, int dy, int dw, int dh, int sx, int sy, int sw, int sh) {

@@ -35,6 +35,9 @@ public record CraftPlanRequestPacket(BlockPos tickerPos, ItemStack result, int a
                     ByteBufCodecs.VAR_INT, CraftPlanRequestPacket::amount,
                     CraftPlanRequestPacket::new);
 
+    /** Upper bound on one request; the amount screen never offers more than 256. */
+    private static final int MAX_AMOUNT = 1024;
+
     @Override
     public Type<CraftPlanRequestPacket> type() {
         return TYPE;
@@ -42,7 +45,7 @@ public record CraftPlanRequestPacket(BlockPos tickerPos, ItemStack result, int a
 
     public static void handle(CraftPlanRequestPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
-            if (!(context.player() instanceof ServerPlayer player) || packet.amount <= 0) {
+            if (!(context.player() instanceof ServerPlayer player) || packet.amount <= 0 || packet.amount > MAX_AMOUNT) {
                 return;
             }
             ServerLevel level = player.serverLevel();
@@ -60,6 +63,9 @@ public record CraftPlanRequestPacket(BlockPos tickerPos, ItemStack result, int a
                 return;
             }
             CraftingPlan plan = CraftingPlanner.plan(level, networkId, packet.result, packet.amount);
+            if (plan.canStart()) {
+                net.hihellohi.createautocrafting.CACAdvancements.award(player, "setup_network", "setup");
+            }
             ModPackets.sendToPlayer(new CraftPlanPacket(packet.tickerPos, packet.result, packet.amount, plan), player);
         });
     }

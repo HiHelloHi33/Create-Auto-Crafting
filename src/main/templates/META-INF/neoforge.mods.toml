@@ -10,7 +10,7 @@ modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
 authors="hihellohi"
-description='''Physical pattern crafting for Create logistics — Pattern Providers, Logic Coils, and virtual stock links.'''
+description='''Auto-crafting for Create logistics: Crafting Distributors, Pattern Cards, Logic Coils and a Circuit Etcher.'''
 
 [[dependencies.${mod_id}]]
 modId="neoforge"
@@ -30,5 +30,12 @@ side="BOTH"
 modId="create"
 type="required"
 versionRange="[6.0.11,6.1.0)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="createaddition"
+type="required"
+versionRange="[1.6.0,)"
 ordering="AFTER"
 side="BOTH"

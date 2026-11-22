@@ -39,9 +39,15 @@ public class CoilCTModel extends BakedModelWrapper<BakedModel> {
 
     @Override
     public ModelData getModelData(BlockAndTintGetter level, BlockPos pos, BlockState state, ModelData data) {
-        boolean assembled = LogicCoilRegistry.assemblyOf(level, pos) != null;
-        ModelData ctData = connected.getModelData(level, pos, state, data);
-        return ctData.derive().with(ASSEMBLED, assembled).build();
+        int[] assembly = LogicCoilRegistry.assemblyOf(level, pos);
+        ModelData ctData;
+        CoilCTBehaviour.CURRENT_ASSEMBLY.set(assembly);
+        try {
+            ctData = connected.getModelData(level, pos, state, data);
+        } finally {
+            CoilCTBehaviour.CURRENT_ASSEMBLY.remove();
+        }
+        return ctData.derive().with(ASSEMBLED, assembly != null).build();
     }
 
     @Override

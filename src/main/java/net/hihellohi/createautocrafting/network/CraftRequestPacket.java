@@ -3,6 +3,9 @@ package net.hihellohi.createautocrafting.network;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity;
 import net.hihellohi.createautocrafting.CreateAutoCrafting;
 import net.hihellohi.createautocrafting.manager.CraftJobManager;
+import net.hihellohi.createautocrafting.manager.CraftingPlanner;
+import net.hihellohi.createautocrafting.pattern.CraftingPlan;
+import net.minecraft.network.chat.Component;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -35,6 +38,9 @@ public record CraftRequestPacket(BlockPos tickerPos, ItemStack result, int amoun
                     ByteBufCodecs.VAR_INT, CraftRequestPacket::amount,
                     CraftRequestPacket::new);
 
+    /** Upper bound on one request; the amount screen never offers more than 256. */
+    private static final int MAX_AMOUNT = 1024;
+
     @Override
     public Type<CraftRequestPacket> type() {
         return TYPE;
@@ -42,7 +48,7 @@ public record CraftRequestPacket(BlockPos tickerPos, ItemStack result, int amoun
 
     public static void handle(CraftRequestPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
-            if (!(context.player() instanceof ServerPlayer player) || packet.amount <= 0) {
+            if (!(context.player() instanceof ServerPlayer player) || packet.amount <= 0 || packet.amount > MAX_AMOUNT) {
                 return;
             }
             ServerLevel level = player.serverLevel();
@@ -59,7 +65,16 @@ public record CraftRequestPacket(BlockPos tickerPos, ItemStack result, int amoun
             if (networkId == null) {
                 return;
             }
-            CraftJobManager.start(level, networkId, player.getUUID(), packet.result, packet.amount);
+            // Re-check on the server: the client's Start button is only a courtesy.
+            CraftingPlan plan = CraftingPlanner.plan(level, networkId, packet.result, packet.amount);
+            if (!plan.canStart()
+                    || !CraftJobManager.start(level, networkId, player.getUUID(), packet.result, packet.amount)) {
+                player.displayClientMessage(
+                        Component.translatable("message.createautocrafting.craft_failed", packet.result.getHoverName()), true);
+            } else {
+                net.hihellohi.createautocrafting.CACAdvancements.award(player, "setup_network", "setup");
+                net.hihellohi.createautocrafting.CACAdvancements.award(player, "order_craft", "ordered");
+            }
         });
     }
 }
