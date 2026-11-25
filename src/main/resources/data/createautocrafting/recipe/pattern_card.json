@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    { "item": "create:crafting_blueprint" },
+    { "item": "create:transmitter" }
+  ],
+  "result": { "id": "createautocrafting:pattern_card", "count": 1 }
+}

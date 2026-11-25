@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "NCN"
+  ],
+  "key": {
+    "N": {
+      "tag": "c:nuggets/copper"
+    },
+    "C": {
+      "item": "minecraft:charcoal"
+    }
+  },
+  "result": {
+    "id": "createautocrafting:resistor",
+    "count": 4
+  }
+}

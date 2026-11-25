@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "createautocrafting:block/etching_acid"
+    }
+  }
+}

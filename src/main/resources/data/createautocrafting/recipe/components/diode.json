@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "N",
+    "Q",
+    "I"
+  ],
+  "key": {
+    "N": {
+      "tag": "c:nuggets/copper"
+    },
+    "Q": {
+      "item": "minecraft:quartz"
+    },
+    "I": {
+      "tag": "c:nuggets/iron"
+    }
+  },
+  "result": {
+    "id": "createautocrafting:diode",
+    "count": 2
+  }
+}

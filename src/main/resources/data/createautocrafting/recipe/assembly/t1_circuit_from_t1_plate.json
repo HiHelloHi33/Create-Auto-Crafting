@@ -1,0 +1,19 @@
+{
+  "type": "createautocrafting:assembly",
+  "plate": {
+    "item": "createautocrafting:t1_etched_plate"
+  },
+  "components": [
+    {
+      "item": "createautocrafting:resistor"
+    },
+    {
+      "item": "createautocrafting:inductor"
+    }
+  ],
+  "result": {
+    "id": "createautocrafting:t1_circuit",
+    "count": 2
+  },
+  "work": 120
+}

@@ -45,7 +45,22 @@ public final class ModBlocks {
             BLOCKS.register("etching_acid", () -> new net.minecraft.world.level.block.LiquidBlock(
                     net.hihellohi.createautocrafting.fluid.ModFluids.ETCHING_ACID.get(),
                     net.minecraft.world.level.block.state.BlockBehaviour.Properties
-                            .ofFullCopy(net.minecraft.world.level.block.Blocks.WATER)));
+                            .ofFullCopy(net.minecraft.world.level.block.Blocks.WATER)) {
+                /** Standing in the acid poisons you. */
+                @Override
+                public void entityInside(net.minecraft.world.level.block.state.BlockState state,
+                                         net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos,
+                                         net.minecraft.world.entity.Entity entity) {
+                    if (!level.isClientSide && entity instanceof net.minecraft.world.entity.LivingEntity living) {
+                        net.minecraft.world.effect.MobEffectInstance cur =
+                                living.getEffect(net.minecraft.world.effect.MobEffects.POISON);
+                        if (cur == null || cur.getDuration() < 40) {
+                            living.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                                    net.minecraft.world.effect.MobEffects.POISON, 100, 0));
+                        }
+                    }
+                }
+            });
 
     public static final DeferredHolder<Block, FactoryCoreBlock> FACTORY_CORE =
             BLOCKS.register("factory_core", FactoryCoreBlock::new);

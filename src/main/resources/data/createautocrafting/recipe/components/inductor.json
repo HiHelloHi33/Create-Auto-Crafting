@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "NNN",
+    "NIN"
+  ],
+  "key": {
+    "N": {
+      "tag": "c:nuggets/copper"
+    },
+    "I": {
+      "tag": "c:nuggets/iron"
+    }
+  },
+  "result": {
+    "id": "createautocrafting:inductor",
+    "count": 2
+  }
+}

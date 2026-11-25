@@ -1,0 +1,22 @@
+{
+  "type": "createautocrafting:assembly",
+  "plate": {
+    "item": "createautocrafting:t2_etched_plate"
+  },
+  "components": [
+    {
+      "item": "createautocrafting:resistor"
+    },
+    {
+      "item": "createautocrafting:inductor"
+    },
+    {
+      "item": "createautocrafting:diode"
+    }
+  ],
+  "result": {
+    "id": "createautocrafting:t2_circuit",
+    "count": 4
+  },
+  "work": 160
+}

@@ -1,0 +1,209 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "basin": "createautocrafting:block/etching_basin",
+    "particle": "createautocrafting:block/etching_basin",
+    "term": "minecraft:block/redstone_block",
+    "panel": "create:block/copper_casing"
+  },
+  "elements": [
+    {
+      "name": "north wall",
+      "from": [
+        0,
+        2,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#basin",
+          "uv": [
+            0,
+            0,
+            8,
+            7
+          ]
+        },
+        "south": {
+          "texture": "#basin",
+          "uv": [
+            9,
+            0,
+            16,
+            7
+          ],
+          "rotation": 180
+        },
+        "west": {
+          "texture": "#basin",
+          "uv": [
+            0,
+            0,
+            1,
+            7
+          ]
+        },
+        "up": {
+          "texture": "#basin",
+          "uv": [
+            0,
+            8,
+            8,
+            9
+          ]
+        },
+        "down": {
+          "texture": "#basin",
+          "uv": [
+            0,
+            8,
+            8,
+            9
+          ]
+        }
+      }
+    },
+    {
+      "name": "west wall",
+      "from": [
+        0,
+        2,
+        2
+      ],
+      "to": [
+        2,
+        16,
+        16
+      ],
+      "faces": {
+        "west": {
+          "texture": "#basin",
+          "uv": [
+            0,
+            0,
+            8,
+            7
+          ]
+        },
+        "east": {
+          "texture": "#basin",
+          "uv": [
+            9,
+            0,
+            16,
+            7
+          ],
+          "rotation": 180
+        },
+        "up": {
+          "texture": "#basin",
+          "uv": [
+            0,
+            9,
+            1,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#basin",
+          "uv": [
+            0,
+            9,
+            1,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "name": "foot and floor",
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#basin",
+          "uv": [
+            1,
+            7,
+            7,
+            8
+          ]
+        },
+        "west": {
+          "texture": "#basin",
+          "uv": [
+            1,
+            7,
+            7,
+            8
+          ]
+        },
+        "up": {
+          "texture": "#basin",
+          "uv": [
+            9,
+            9,
+            15,
+            15
+          ],
+          "rotation": 90
+        },
+        "down": {
+          "texture": "#basin",
+          "uv": [
+            9,
+            9,
+            15,
+            15
+          ]
+        }
+      }
+    },
+    {
+      "name": "extra",
+      "from": [
+        4,
+        5,
+        -0.6
+      ],
+      "to": [
+        12,
+        11,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#term"
+        },
+        "east": {
+          "texture": "#term"
+        },
+        "south": {
+          "texture": "#term"
+        },
+        "west": {
+          "texture": "#term"
+        },
+        "up": {
+          "texture": "#term"
+        },
+        "down": {
+          "texture": "#term"
+        }
+      }
+    }
+  ]
+}

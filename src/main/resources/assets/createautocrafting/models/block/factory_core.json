@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "createautocrafting:block/factory_core",
+    "end": "createautocrafting:block/factory_core_top"
+  }
+}

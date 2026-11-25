@@ -1,0 +1,10 @@
+{
+  "parent": "createautocrafting:setup_network",
+  "display": {
+    "icon": {"id": "createautocrafting:pattern_card"},
+    "title": {"translate": "advancement.createautocrafting.order_craft.title"},
+    "description": {"translate": "advancement.createautocrafting.order_craft.desc"},
+    "frame": "task"
+  },
+  "criteria": {"ordered": {"trigger": "minecraft:impossible"}}
+}

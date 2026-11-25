@@ -1,0 +1,10 @@
+{
+  "parent": "createautocrafting:root",
+  "display": {
+    "icon": {"id": "createautocrafting:crafting_distributor"},
+    "title": {"translate": "advancement.createautocrafting.setup_network.title"},
+    "description": {"translate": "advancement.createautocrafting.setup_network.desc"},
+    "frame": "goal"
+  },
+  "criteria": {"setup": {"trigger": "minecraft:impossible"}}
+}

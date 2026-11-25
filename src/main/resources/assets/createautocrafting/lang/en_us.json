@@ -77,8 +77,8 @@
   "createautocrafting.jei.assembly.count": "Makes %s",
   "block.createautocrafting.factory_core": "Factory Core",
   "block.createautocrafting.energy_input": "Energy Input",
-  "block.createautocrafting.etching_factory_controller": "Etching Factory Controller",
-  "block.createautocrafting.circuit_assembler_controller": "Circuit Assembler Controller",
+  "block.createautocrafting.etching_factory_controller": "Etching Factory",
+  "block.createautocrafting.circuit_assembler_controller": "Circuit Assembly",
   "tooltip.createautocrafting.factory_core.1": "The body of a factory. Two of these go in every 2x2.",
   "tooltip.createautocrafting.factory_core.2": "2x2 = 1 controller + 1 Energy Input + 2 Factory Cores, flat, in any arrangement.",
   "tooltip.createautocrafting.energy_input.1": "Accepts Forge Energy from cables. Place it in a factory's 2x2.",
@@ -93,6 +93,11 @@
   "advancement.createautocrafting.root.desc": "Make Create craft things for you",
   "advancement.createautocrafting.setup_network.title": "Factory Floor",
   "advancement.createautocrafting.setup_network.desc": "Set up an autocrafting network that is ready to craft",
+  "gui.createautocrafting.circuit_assembler.tier.1": "Tier One",
+  "gui.createautocrafting.circuit_assembler.tier.2": "Tier Two",
+  "gui.createautocrafting.circuit_assembler.tier.3": "Tier Three",
+  "gui.createautocrafting.circuit_assembler.on": "Running (click to pause)",
+  "gui.createautocrafting.circuit_assembler.off": "Paused (click to run)",
   "advancement.createautocrafting.order_craft.title": "Make It So",
   "advancement.createautocrafting.order_craft.desc": "Order a craft from your autocrafting network"
 }

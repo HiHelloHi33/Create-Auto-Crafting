@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "createautocrafting:t1_unetched_plate"
+    },
+    {
+      "item": "create:brass_sheet"
+    },
+    {
+      "item": "create:golden_sheet"
+    }
+  ],
+  "result": {
+    "id": "createautocrafting:t2_unetched_plate",
+    "count": 1
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "values": [
+    "createautocrafting:logic_coil",
+    "createautocrafting:crafting_distributor",
+    "createautocrafting:factory_core",
+    "createautocrafting:energy_input",
+    "createautocrafting:etching_factory_controller",
+    "createautocrafting:circuit_assembler_controller"
+  ]
+}

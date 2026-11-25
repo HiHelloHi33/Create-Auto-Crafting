@@ -1,0 +1,180 @@
+{
+  "variants": {
+    "formed=false,facing=north,part=controller,kind=none": {
+      "model": "createautocrafting:block/circuit_assembler_controller"
+    },
+    "formed=true,facing=north,part=controller,kind=etcher": {
+      "model": "createautocrafting:block/etcher_shell_controller",
+      "y": 270
+    },
+    "formed=true,facing=north,part=controller,kind=assembler": {
+      "model": "createautocrafting:block/assembler_shell_controller",
+      "y": 270
+    },
+    "formed=false,facing=north,part=front,kind=none": {
+      "model": "createautocrafting:block/circuit_assembler_controller"
+    },
+    "formed=true,facing=north,part=front,kind=etcher": {
+      "model": "createautocrafting:block/etcher_shell_controller",
+      "y": 0
+    },
+    "formed=true,facing=north,part=front,kind=assembler": {
+      "model": "createautocrafting:block/assembler_shell_controller",
+      "y": 0
+    },
+    "formed=false,facing=north,part=right,kind=none": {
+      "model": "createautocrafting:block/circuit_assembler_controller"
+    },
+    "formed=true,facing=north,part=right,kind=etcher": {
+      "model": "createautocrafting:block/etcher_shell_controller",
+      "y": 180
+    },
+    "formed=true,facing=north,part=right,kind=assembler": {
+      "model": "createautocrafting:block/assembler_shell_controller",
+      "y": 180
+    },
+    "formed=false,facing=north,part=diagonal,kind=none": {
+      "model": "createautocrafting:block/circuit_assembler_controller"
+    },
+    "formed=true,facing=north,part=diagonal,kind=etcher": {
+      "model": "createautocrafting:block/etcher_shell_controller",
+      "y": 90
+    },
+    "formed=true,facing=north,part=diagonal,kind=assembler": {
+      "model": "createautocrafting:block/assembler_shell_controller",
+      "y": 90
+    },
+    "formed=false,facing=south,part=controller,kind=none": {
+      "model": "createautocrafting:block/circuit_assembler_controller"
+    },
+    "formed=true,facing=south,part=controller,kind=etcher": {
+      "model": "createautocrafting:block/etcher_shell_controller",
+      "y": 90
+    },
+    "formed=true,facing=south,part=controller,kind=assembler": {
+      "model": "createautocrafting:block/assembler_shell_controller",
+      "y": 90
+    },
+    "formed=false,facing=south,part=front,kind=none": {
+      "model": "createautocrafting:block/circuit_assembler_controller"
+    },
+    "formed=true,facing=south,part=front,kind=etcher": {
+      "model": "createautocrafting:block/etcher_shell_controller",
+      "y": 180
+    },
+    "formed=true,facing=south,part=front,kind=assembler": {
+      "model": "createautocrafting:block/assembler_shell_controller",
+      "y": 180
+    },
+    "formed=false,facing=south,part=right,kind=none": {
+      "model": "createautocrafting:block/circuit_assembler_controller"
+    },
+    "formed=true,facing=south,part=right,kind=etcher": {
+      "model": "createautocrafting:block/etcher_shell_controller",
+      "y": 0
+    },
+    "formed=true,facing=south,part=right,kind=assembler": {
+      "model": "createautocrafting:block/assembler_shell_controller",
+      "y": 0
+    },
+    "formed=false,facing=south,part=diagonal,kind=none": {
+      "model": "createautocrafting:block/circuit_assembler_controller"
+    },
+    "formed=true,facing=south,part=diagonal,kind=etcher": {
+      "model": "createautocrafting:block/etcher_shell_controller",
+      "y": 270
+    },
+    "formed=true,facing=south,part=diagonal,kind=assembler": {
+      "model": "createautocrafting:block/assembler_shell_controller",
+      "y": 270
+    },
+    "formed=false,facing=east,part=controller,kind=none": {
+      "model": "createautocrafting:block/circuit_assembler_controller"
+    },
+    "formed=true,facing=east,part=controller,kind=etcher": {
+      "model": "createautocrafting:block/etcher_shell_controller",
+      "y": 0
+    },
+    "formed=true,facing=east,part=controller,kind=assembler": {
+      "model": "createautocrafting:block/assembler_shell_controller",
+      "y": 0
+    },
+    "formed=false,facing=east,part=front,kind=none": {
+      "model": "createautocrafting:block/circuit_assembler_controller"
+    },
+    "formed=true,facing=east,part=front,kind=etcher": {
+      "model": "createautocrafting:block/etcher_shell_controller",
+      "y": 90
+    },
+    "formed=true,facing=east,part=front,kind=assembler": {
+      "model": "createautocrafting:block/assembler_shell_controller",
+      "y": 90
+    },
+    "formed=false,facing=east,part=right,kind=none": {
+      "model": "createautocrafting:block/circuit_assembler_controller"
+    },
+    "formed=true,facing=east,part=right,kind=etcher": {
+      "model": "createautocrafting:block/etcher_shell_controller",
+      "y": 270
+    },
+    "formed=true,facing=east,part=right,kind=assembler": {
+      "model": "createautocrafting:block/assembler_shell_controller",
+      "y": 270
+    },
+    "formed=false,facing=east,part=diagonal,kind=none": {
+      "model": "createautocrafting:block/circuit_assembler_controller"
+    },
+    "formed=true,facing=east,part=diagonal,kind=etcher": {
+      "model": "createautocrafting:block/etcher_shell_controller",
+      "y": 180
+    },
+    "formed=true,facing=east,part=diagonal,kind=assembler": {
+      "model": "createautocrafting:block/assembler_shell_controller",
+      "y": 180
+    },
+    "formed=false,facing=west,part=controller,kind=none": {
+      "model": "createautocrafting:block/circuit_assembler_controller"
+    },
+    "formed=true,facing=west,part=controller,kind=etcher": {
+      "model": "createautocrafting:block/etcher_shell_controller",
+      "y": 180
+    },
+    "formed=true,facing=west,part=controller,kind=assembler": {
+      "model": "createautocrafting:block/assembler_shell_controller",
+      "y": 180
+    },
+    "formed=false,facing=west,part=front,kind=none": {
+      "model": "createautocrafting:block/circuit_assembler_controller"
+    },
+    "formed=true,facing=west,part=front,kind=etcher": {
+      "model": "createautocrafting:block/etcher_shell_controller",
+      "y": 270
+    },
+    "formed=true,facing=west,part=front,kind=assembler": {
+      "model": "createautocrafting:block/assembler_shell_controller",
+      "y": 270
+    },
+    "formed=false,facing=west,part=right,kind=none": {
+      "model": "createautocrafting:block/circuit_assembler_controller"
+    },
+    "formed=true,facing=west,part=right,kind=etcher": {
+      "model": "createautocrafting:block/etcher_shell_controller",
+      "y": 90
+    },
+    "formed=true,facing=west,part=right,kind=assembler": {
+      "model": "createautocrafting:block/assembler_shell_controller",
+      "y": 90
+    },
+    "formed=false,facing=west,part=diagonal,kind=none": {
+      "model": "createautocrafting:block/circuit_assembler_controller"
+    },
+    "formed=true,facing=west,part=diagonal,kind=etcher": {
+      "model": "createautocrafting:block/etcher_shell_controller",
+      "y": 0
+    },
+    "formed=true,facing=west,part=diagonal,kind=assembler": {
+      "model": "createautocrafting:block/assembler_shell_controller",
+      "y": 0
+    }
+  }
+}

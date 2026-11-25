@@ -1,0 +1,11 @@
+{
+  "display": {
+    "icon": {"id": "createautocrafting:logic_coil"},
+    "title": {"translate": "advancement.createautocrafting.root.title"},
+    "description": {"translate": "advancement.createautocrafting.root.desc"},
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
+    "show_toast": false,
+    "announce_to_chat": false
+  },
+  "criteria": {"has_coil": {"trigger": "minecraft:inventory_changed", "conditions": {"items": [{"items": "createautocrafting:logic_coil"}]}}}
+}

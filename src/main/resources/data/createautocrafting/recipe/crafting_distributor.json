@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " C ",
+    "CEC",
+    "RCR"
+  ],
+  "key": {
+    "C": {
+      "tag": "c:ingots/iron"
+    },
+    "E": {
+      "item": "createautocrafting:t1_circuit"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "result": {
+    "id": "createautocrafting:crafting_distributor",
+    "count": 1
+  }
+}

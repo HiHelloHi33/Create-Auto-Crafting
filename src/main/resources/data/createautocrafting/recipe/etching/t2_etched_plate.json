@@ -1,0 +1,14 @@
+{
+  "type": "createautocrafting:etching",
+  "base": {
+    "item": "createautocrafting:t2_unetched_plate"
+  },
+  "fluid": {
+    "fluid": "createautocrafting:etching_acid",
+    "amount": 250
+  },
+  "result": {
+    "id": "createautocrafting:t2_etched_plate",
+    "count": 1
+  }
+}

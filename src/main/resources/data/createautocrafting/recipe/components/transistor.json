@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GQG",
+    " C "
+  ],
+  "key": {
+    "G": {
+      "tag": "c:nuggets/gold"
+    },
+    "Q": {
+      "item": "minecraft:quartz"
+    },
+    "C": {
+      "tag": "c:nuggets/copper"
+    }
+  },
+  "result": {
+    "id": "createautocrafting:transistor",
+    "count": 2
+  }
+}
