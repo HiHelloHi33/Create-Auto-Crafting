@@ -1,0 +1,129 @@
+{
+  "textures": {
+    "arm": "createautocrafting:block/circuit_assembler_arm",
+    "parts": "createautocrafting:block/circuit_assembler_parts",
+    "particle": "createautocrafting:block/circuit_assembler_arm"
+  },
+  "elements": [
+    {
+      "from": [6.4, 2.5, 6.4],
+      "to": [9.6, 3.8, 9.6],
+      "faces": {
+        "down": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "up": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "north": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "south": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "west": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "east": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        }
+      }
+    },
+    {
+      "from": [7.0, 3.8, 6.6],
+      "to": [9.0, 6.0, 7.2],
+      "faces": {
+        "down": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "up": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "north": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "south": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "west": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "east": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        }
+      }
+    },
+    {
+      "from": [7.0, 3.8, 8.8],
+      "to": [9.0, 6.0, 9.4],
+      "faces": {
+        "down": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "up": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "north": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "south": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "west": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "east": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        }
+      }
+    },
+    {
+      "from": [7.6, 4.6, 6.4],
+      "to": [8.4, 5.4, 9.6],
+      "faces": {
+        "down": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        },
+        "up": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        },
+        "north": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        },
+        "south": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        },
+        "west": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        },
+        "east": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        }
+      }
+    }
+  ]
+}

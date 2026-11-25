@@ -1,6 +1,7 @@
 package net.hihellohi.createautocrafting.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.hihellohi.createautocrafting.blocks.CircuitAssemblerBlockEntity;
 import net.hihellohi.createautocrafting.blocks.FactoryMemberBlock;
 import net.hihellohi.createautocrafting.etching.AssemblyRecipe;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import org.joml.Quaternionf;
 
 import java.util.Arrays;
 
@@ -29,6 +31,11 @@ public class CircuitAssemblerRenderer implements BlockEntityRenderer<CircuitAsse
     private static final float HEAD_LOW = FLOOR + 0.17f;
     /** Where each component ends up on the plate (offsets from the plate's middle, in local x/z). */
     private static final float[][] SPOTS = {{-0.1f, -0.1f}, {0.1f, -0.1f}, {-0.1f, 0.1f}, {0.1f, 0.1f}, {0f, 0f}};
+    // Joints of the loose controller's robot arm, in pixels, with the arm resting along +X.
+    private static final float ARM_SHOULDER_Y = 5;
+    private static final float ARM_ELBOW_Y = 10;
+    private static final float ARM_WRIST_X = 12.2f;
+    private static final float ARM_CLAW_TRAVEL = 0.35f;
 
     public CircuitAssemblerRenderer(BlockEntityRendererProvider.Context context) {
     }
@@ -42,6 +49,7 @@ public class CircuitAssemblerRenderer implements BlockEntityRenderer<CircuitAsse
                               int light, int overlay) {
         BlockState state = be.getBlockState();
         if (!state.hasProperty(FactoryMemberBlock.FORMED) || !state.getValue(FactoryMemberBlock.FORMED)) {
+            renderLooseArm(be, pt, ms, buffer, light, overlay);
             return;
         }
         Direction facing = state.getValue(FactoryMemberBlock.FACING);
@@ -130,6 +138,55 @@ public class CircuitAssemblerRenderer implements BlockEntityRenderer<CircuitAsse
         }
         renderGantry(ms, buffer, light, overlay, headX, headY, headZ);
         ms.popPose();
+    }
+
+    /** A loose controller shows its robot arm running through a pick-and-place loop. */
+    private static void renderLooseArm(CircuitAssemblerBlockEntity be, float pt, PoseStack ms, MultiBufferSource buffer,
+                                       int light, int overlay) {
+        if (be.getLevel() == null) {
+            return;
+        }
+        float time = be.getLevel().getGameTime() % ArmAnimation.CYCLE + pt;
+        ArmAnimation.Pose pose = ArmAnimation.sample(time);
+
+        if (ArmAnimation.showsPlacedComponent(time)) {
+            ClientModels.render(ClientModels.ARM_PLACED_COMPONENT, ms, buffer, light, overlay);
+        }
+
+        ms.pushPose();
+        rotateAround(ms, Axis.YP.rotationDegrees(pose.yaw()), 8, 0, 8);
+        ClientModels.render(ClientModels.ARM_TURNTABLE, ms, buffer, light, overlay);
+
+        rotateAround(ms, Axis.ZP.rotationDegrees(-pose.lean()), 8, ARM_SHOULDER_Y, 8);
+        ClientModels.render(ClientModels.ARM_LOWER_ARM, ms, buffer, light, overlay);
+
+        rotateAround(ms, Axis.ZP.rotationDegrees(pose.lean() - pose.droop()), 8, ARM_ELBOW_Y, 8);
+        ClientModels.render(ClientModels.ARM_UPPER_ARM, ms, buffer, light, overlay);
+
+        // Undo the arm's tilt so the claw always hangs straight down.
+        rotateAround(ms, Axis.ZP.rotationDegrees(pose.droop()), ARM_WRIST_X, ARM_ELBOW_Y, 8);
+        ClientModels.render(ClientModels.ARM_CLAW, ms, buffer, light, overlay);
+
+        float open = ARM_CLAW_TRAVEL * pose.clawOpen() / 16f;
+        ms.pushPose();
+        ms.translate(0, 0, -open);
+        ClientModels.render(ClientModels.ARM_CLAW_LEFT, ms, buffer, light, overlay);
+        ms.popPose();
+        ms.pushPose();
+        ms.translate(0, 0, open);
+        ClientModels.render(ClientModels.ARM_CLAW_RIGHT, ms, buffer, light, overlay);
+        ms.popPose();
+
+        switch (pose.held()) {
+            case COMPONENT -> ClientModels.render(ClientModels.ARM_HELD_COMPONENT, ms, buffer, light, overlay);
+            case CIRCUIT -> ClientModels.render(ClientModels.ARM_HELD_CIRCUIT, ms, buffer, light, overlay);
+            case NONE -> { }
+        }
+        ms.popPose();
+    }
+
+    private static void rotateAround(PoseStack ms, Quaternionf rotation, float x, float y, float z) {
+        ms.rotateAround(rotation, x / 16f, y / 16f, z / 16f);
     }
 
     private static float tri(float x) {

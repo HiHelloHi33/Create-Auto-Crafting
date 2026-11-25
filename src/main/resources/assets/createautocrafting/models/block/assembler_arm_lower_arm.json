@@ -1,0 +1,99 @@
+{
+  "textures": {
+    "arm": "createautocrafting:block/circuit_assembler_arm",
+    "parts": "createautocrafting:block/circuit_assembler_parts",
+    "particle": "createautocrafting:block/circuit_assembler_arm"
+  },
+  "elements": [
+    {
+      "from": [7.4, 4.6, 7.3],
+      "to": [8.6, 10.4, 8.7],
+      "faces": {
+        "down": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "up": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "north": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "south": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "west": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "east": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        }
+      }
+    },
+    {
+      "from": [7.3, 9.3, 7.0],
+      "to": [8.7, 10.7, 9.0],
+      "faces": {
+        "down": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "up": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "north": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "south": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "west": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "east": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        }
+      }
+    },
+    {
+      "from": [7.6, 9.6, 6.8],
+      "to": [8.4, 10.4, 9.2],
+      "faces": {
+        "down": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        },
+        "up": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        },
+        "north": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        },
+        "south": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        },
+        "west": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        },
+        "east": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        }
+      }
+    }
+  ]
+}

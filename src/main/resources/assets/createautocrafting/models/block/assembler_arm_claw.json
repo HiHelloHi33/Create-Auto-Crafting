@@ -1,0 +1,69 @@
+{
+  "textures": {
+    "arm": "createautocrafting:block/circuit_assembler_arm",
+    "parts": "createautocrafting:block/circuit_assembler_parts",
+    "particle": "createautocrafting:block/circuit_assembler_arm"
+  },
+  "elements": [
+    {
+      "from": [11.5, 8.6, 7.1],
+      "to": [12.9, 9.4, 8.9],
+      "faces": {
+        "down": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "up": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "north": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "south": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "west": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        },
+        "east": {
+          "texture": "#arm",
+          "uv": [0, 0, 16, 16]
+        }
+      }
+    },
+    {
+      "from": [11.9, 9.4, 7.6],
+      "to": [12.5, 9.8, 8.4],
+      "faces": {
+        "down": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        },
+        "up": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        },
+        "north": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        },
+        "south": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        },
+        "west": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        },
+        "east": {
+          "texture": "#parts",
+          "uv": [0, 8, 8, 16]
+        }
+      }
+    }
+  ]
+}

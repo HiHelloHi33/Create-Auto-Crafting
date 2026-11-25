@@ -1,0 +1,39 @@
+{
+  "textures": {
+    "arm": "createautocrafting:block/circuit_assembler_arm",
+    "parts": "createautocrafting:block/circuit_assembler_parts",
+    "particle": "createautocrafting:block/circuit_assembler_arm"
+  },
+  "elements": [
+    {
+      "from": [7.6, 2.9, 12.0],
+      "to": [8.4, 3.5, 12.8],
+      "faces": {
+        "down": {
+          "texture": "#parts",
+          "uv": [8, 0, 12, 4]
+        },
+        "up": {
+          "texture": "#parts",
+          "uv": [8, 0, 12, 4]
+        },
+        "north": {
+          "texture": "#parts",
+          "uv": [8, 0, 12, 4]
+        },
+        "south": {
+          "texture": "#parts",
+          "uv": [8, 0, 12, 4]
+        },
+        "west": {
+          "texture": "#parts",
+          "uv": [8, 0, 12, 4]
+        },
+        "east": {
+          "texture": "#parts",
+          "uv": [8, 0, 12, 4]
+        }
+      }
+    }
+  ]
+}
